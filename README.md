@@ -4,6 +4,7 @@
 <div>
 A goal-driven Data Scientist with a strong foundation in analytical skills and a passion for deriving insights from data. Proficient in data manipulation, statistical analysis, and data visualization, I am eager to leverage my skills to drive informed business decisions. I am also enthusiastic about applying Machine Learning methodologies, utilizing Excel for in-depth analysis, and utilizing SQL for effective data querying and manipulation. My goal is to contribute to data-driven strategies while continuously expanding my expertise in these domains.
 </div>
+
 [![Instagram](https://img.shields.io/badge/Instagram-%23E4405F.svg?logo=Instagram&logoColor=white)](https://instagram.com/shivanshxx._) [![LinkedIn](https://img.shields.io/badge/LinkedIn-%230077B5.svg?logo=linkedin&logoColor=white)](https://linkedin.com/in/shvuuuu) [![Reddit](https://img.shields.io/badge/Reddit-%23FF4500.svg?logo=Reddit&logoColor=white)](https://reddit.com/user/shvuuuu) [![Twitter](https://img.shields.io/badge/Twitter-%231DA1F2.svg?logo=Twitter&logoColor=white)](https://twitter.com/shvuuuu) 
 
 # 💻 Tech Stack:
