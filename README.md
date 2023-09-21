@@ -1,4 +1,4 @@
-<img src="https://drive.google.com/file/d/14seGK8fUatDUeugYF1SL0NzNt-kW-xez/view?usp=sharing">
+<img src="https://github.com/shvuuuu/shvuuuu/blob/main/banner.png">
 
 # 💫 About Me:
 <div>
