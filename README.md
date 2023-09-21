@@ -1,4 +1,5 @@
 <img src="https://media.licdn.com/dms/image/C5616AQFfXhbWUWikkg/profile-displaybackgroundimage-shrink_350_1400/0/1660068237310?e=1700697600&v=beta&t=f71fV_N0wQLcE-gXDtNAs2IMFksVZHMe09Xk5iIzhUU">
+
 # 💫 About Me:
 
 A goal-driven Data Scientist with a strong foundation in analytical skills and a passion for deriving insights from data. Proficient in data manipulation, statistical analysis, and data visualization, I am eager to leverage my skills to drive informed business decisions. I am also enthusiastic about applying Machine Learning methodologies, utilizing Excel for in-depth analysis, and utilizing SQL for effective data querying and manipulation. My goal is to contribute to data-driven strategies while continuously expanding my expertise in these domains.
@@ -18,14 +19,10 @@ A goal-driven Data Scientist with a strong foundation in analytical skills and a
 </div>
 
 ## 🏆 GitHub Trophies
-<div align="center">
-  ![](https://github-profile-trophy.vercel.app/?username=shvuuuu&theme=darkhub&no-frame=true&no-bg=false&margin-w=4)
-</div>
+![](https://github-profile-trophy.vercel.app/?username=shvuuuu&theme=darkhub&no-frame=true&no-bg=false&margin-w=4)
 
 ### 🔝 Top Contributed Repo
-<div align="center">
-  ![](https://github-contributor-stats.vercel.app/api?username=shvuuuu&limit=5&theme=dark&combine_all_yearly_contributions=true)
-</div>
+![](https://github-contributor-stats.vercel.app/api?username=shvuuuu&limit=5&theme=dark&combine_all_yearly_contributions=true)
 
 ### 😂 Random Dev Memes
 <div align="center">
