@@ -22,7 +22,7 @@ A goal-driven Data Scientist with a strong foundation in analytical skills and a
 
 ## 🏆 GitHub Trophies
 <div align="center">
-  <img src="[https://github-profile-trophy.vercel.app/?username=shvuuuu&column=8&theme=onedark](https://github-profile-trophy.vercel.app/?username=shvuuuu&theme=darkhub&no-frame=true&no-bg=false&margin-w=4)" />
+  <img src="https://github-profile-trophy.vercel.app/?username=shvuuuu&column=8&theme=onedark](https://github-profile-trophy.vercel.app/?username=shvuuuu&theme=darkhub&no-frame=true&no-bg=false&margin-w=4" />
 </div>
 
 ### 🔝 Top Contributed Repo
