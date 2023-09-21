@@ -32,6 +32,6 @@ A goal-driven Data Scientist with a strong foundation in analytical skills and a
 ### 😂 Random Dev Memes
 <div align="center">
   <img src='https://randommeme-five.vercel.app/' style="height: 400px;"/>
-  ![](https://visitcount.itsvg.in/api?id=shvuuuu&icon=0&color=1)](https://visitcount.itsvg.in)
 </div>
-
+---
+[![](https://visitcount.itsvg.in/api?id=shvuuuu&icon=0&color=1)](https://visitcount.itsvg.in)
