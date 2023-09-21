@@ -14,9 +14,11 @@ A goal-driven Data Scientist with a strong foundation in analytical skills and a
 
 # 📊 GitHub Stats:
 <div align="center">
-  <img src="https://github-readme-stats.vercel.app/api?username=shvuuuu&hide_title=false&hide_rank=false&show_icons=true&include_all_commits=true&count_private=true&disable_animations=false&theme=dracula&locale=en&hide_border=false" height="150" alt="stats graph"  />
-  <img src="https://github-readme-stats.vercel.app/api/top-langs?username=shvuuuu&locale=en&hide_title=false&layout=compact&card_width=320&langs_count=5&theme=dracula&hide_border=false" height="150" alt="languages graph"  />
+    <a href="#"><img alt="Shivansh's Github Stats" src="https://github-readme-stats.vercel.app/api?username=shvuuuu&show_icons=true&include_all_commits=true&count_private=true&theme=react&hide_border=true&bg_color=0D1117&title_color=5ce1e6&icon_color=5ce1e6" height="200"/></a>
+    <a href="#"><img alt="Shivansh's Top Languages" src="https://github-readme-stats.vercel.app/api/top-langs/?username=shvuuuu&langs_count=10&layout=compact&theme=react&hide_border=true&bg_color=0D1117&title_color=5ce1e6&icon_color=5ce1e6" height="200"/></a>
+   <p align="center"> <img src="https://komarev.com/ghpvc/?username=akshatrastogi-1nc0re&label=Profile%20views&color=0e75b6&style=flat" alt="akshatrastogi-1nc0re" /> </p>
 </div>
+
 
 ## 🏆 GitHub Trophies
 ![](https://github-profile-trophy.vercel.app/?username=shvuuuu&theme=darkhub&no-frame=true&no-bg=false&margin-w=4)
@@ -28,4 +30,3 @@ A goal-driven Data Scientist with a strong foundation in analytical skills and a
 <div align="center">
   <img src='https://randommeme-five.vercel.app/' style="height: 400px;"/>
 </div>
-![](https://visitcount.itsvg.in/api?id=shvuuuu&icon=0&color=1)](https://visitcount.itsvg.in)
