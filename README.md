@@ -6,7 +6,7 @@ A goal-driven Data Scientist with a strong foundation in analytical skills and a
 </div>
 <br>
 
-[![Instagram](https://img.shields.io/badge/Instagram-%23E4405F.svg?logo=Instagram&logoColor=white)](https://instagram.com/shivanshxx._) [![LinkedIn](https://img.shields.io/badge/LinkedIn-%230077B5.svg?logo=linkedin&logoColor=white)](https://linkedin.com/in/shvuuuu) [![Reddit](https://img.shields.io/badge/Reddit-%23FF4500.svg?logo=Reddit&logoColor=white)](https://reddit.com/user/shvuuuu) [![Twitter](https://img.shields.io/badge/Twitter-%231DA1F2.svg?logo=Twitter&logoColor=white)](https://twitter.com/shvuuuu)  <img src="https://komarev.com/ghpvc/?username=shvuuuu&label=Profile%20views&color=0e75b6&style=flat" alt="shvuuuu"/>
+[![Website]([https://img.shields.io/badge/Instagram-%23E4405F.svg?logo=Instagram&logoColor=white](https://img.shields.io/badge/website-000000?style=for-the-badge&logo=About.me&logoColor=white))](https://shivanshdwivedi.tech/) [![LinkedIn](https://img.shields.io/badge/LinkedIn-%230077B5.svg?logo=linkedin&logoColor=white)](https://linkedin.com/in/shvuuuu) [![Reddit](https://img.shields.io/badge/Reddit-%23FF4500.svg?logo=Reddit&logoColor=white)](https://reddit.com/user/shvuuuu) [![Twitter](https://img.shields.io/badge/Twitter-%231DA1F2.svg?logo=Twitter&logoColor=white)](https://twitter.com/shvuuuu)  <img src="https://komarev.com/ghpvc/?username=shvuuuu&label=Profile%20views&color=0e75b6&style=flat" alt="shvuuuu"/>
 
 
 # 💻 Tech Stack
