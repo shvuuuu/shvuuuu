@@ -14,7 +14,7 @@ A goal-driven Data Scientist with a strong foundation in analytical skills and a
 
 # 📊 GitHub Stats:
 <div align="center">
-    <a href="#"><img alt="Shivansh's Github Stats" src="https://github-readme-stats.vercel.app/api?username=shvuuuu&show_icons=true&include_all_commits=true&count_private=true&theme=react&hide_border=true&bg_color=0D1117&title_color=5ce1e6&icon_color=5ce1e6" height="200"/></a>
+    <a href="#"><img alt="Shivansh's Github Stats" src="https://github-readme-stats.vercel.app/api?username=shvuuuu&show_icons=true&include_all_commits=true&count_private=flase&theme=react&hide_border=true&bg_color=0D1117&title_color=5ce1e6&icon_color=5ce1e6" height="200"/></a>
     <a href="#"><img alt="Shivansh's Top Languages" src="https://github-readme-stats.vercel.app/api/top-langs/?username=shvuuuu&langs_count=10&layout=compact&theme=react&hide_border=true&bg_color=0D1117&title_color=5ce1e6&icon_color=5ce1e6" height="200"/></a>
    <p align="center"> <img src="https://komarev.com/ghpvc/?username=akshatrastogi-1nc0re&label=Profile%20views&color=0e75b6&style=flat" alt="akshatrastogi-1nc0re" /> </p>
 </div>
