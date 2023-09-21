@@ -1,6 +1,4 @@
 <img src="https://media.licdn.com/dms/image/C5616AQFfXhbWUWikkg/profile-displaybackgroundimage-shrink_350_1400/0/1660068237310?e=1700697600&v=beta&t=f71fV_N0wQLcE-gXDtNAs2IMFksVZHMe09Xk5iIzhUU">
-![](https://visitcount.itsvg.in/api?id=shvuuuu&icon=0&color=1)](https://visitcount.itsvg.in)
-
 # 💫 About Me:
 
 A goal-driven Data Scientist with a strong foundation in analytical skills and a passion for deriving insights from data. Proficient in data manipulation, statistical analysis, and data visualization, I am eager to leverage my skills to drive informed business decisions. I am also enthusiastic about applying Machine Learning methodologies, utilizing Excel for in-depth analysis, and utilizing SQL for effective data querying and manipulation. My goal is to contribute to data-driven strategies while continuously expanding my expertise in these domains.
@@ -33,5 +31,4 @@ A goal-driven Data Scientist with a strong foundation in analytical skills and a
 <div align="center">
   <img src='https://randommeme-five.vercel.app/' style="height: 400px;"/>
 </div>
----
-[![](https://visitcount.itsvg.in/api?id=shvuuuu&icon=0&color=1)](https://visitcount.itsvg.in)
+![](https://visitcount.itsvg.in/api?id=shvuuuu&icon=0&color=1)](https://visitcount.itsvg.in)
