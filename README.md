@@ -3,7 +3,7 @@
 # 🚀 About Me
 
 <div>
-A goal-driven Data Scientist with a strong foundation in analytical skills and a passion for deriving insights from data. Proficient in data manipulation, statistical analysis, and data visualization, I am eager to leverage my skills to drive informed business decisions. I am also enthusiastic about applying Machine Learning methodologies, utilizing Excel for in-depth analysis, and utilizing SQL for effective data querying and manipulation. My goal is to contribute to data-driven strategies while continuously expanding my expertise in these domains.
+My work sits at the intersection of AI, Product, and Execution. I turn ideas into practical, high-impact solutions
 </div>
 <br>
 
