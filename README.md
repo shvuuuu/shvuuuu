@@ -12,7 +12,9 @@
 
 **I build AI that enterprises can trust.** It does the work, shows its reasoning, and keeps people in control.
 
-<p align="center"><a href="https://kadeep.ai"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/dark/link-kadeep.svg"><img
+<p align="center"><a href="https://extratunnel.ai"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/dark/link-extratunnel.svg"><img
+  src="assets/light/link-extratunnel.svg" height="48" alt="ExtraTunnel"></picture></a><a
+  href="https://kadeep.ai"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/dark/link-kadeep.svg"><img
   src="assets/light/link-kadeep.svg" height="48" alt="KaDeep AI"></picture></a><a
   href="https://9to5code.com"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/dark/link-9to5code.svg"><img
   src="assets/light/link-9to5code.svg" height="48" alt="9to5code"></picture></a><a
@@ -27,6 +29,20 @@
   <source media="(prefers-color-scheme: dark)" srcset="assets/dark/h-building.svg">
   <img src="assets/light/h-building.svg" width="100%" alt="What I'm building. Products for the agent era.">
 </picture>
+
+<p>
+<a href="https://extratunnel.ai"><picture>
+  <source media="(prefers-color-scheme: dark)" srcset="assets/dark/card-extratunnel.svg">
+  <img src="assets/light/card-extratunnel.svg" width="100%" alt="ExtraTunnel. The privacy layer for AI coding agents. Customer data stays on the laptop. Every request is signed. On the right, the ExtraTunnel tunnel: real values in orange stream into a green seal frame and leave as blue placeholders.">
+</picture></a>
+</p>
+
+<p>
+<a href="https://extratunnel.ai/#security-teams"><picture>
+  <source media="(prefers-color-scheme: dark)" srcset="assets/dark/card-extratunnel-proof.svg">
+  <img src="assets/light/card-extratunnel-proof.svg" width="100%" alt="ExtraTunnel, for security teams. Proof you can check, not a promise. Every request takes the same path: sealed and checked on the laptop, the model sees only stand-ins, the real values come back on the way home, and a signed receipt is written for each one. Below, one request end to end with made-up values: Claude Code, Codex, Cursor and other agents send Dana Whitfield, the seal turns it into the stand-in Rohan Malhotra, the check finds 0 real values, the AI provider sees only the stand-in, the restore puts the real name back, and each receipt is chained to the last.">
+</picture></a>
+</p>
 
 <p>
 <a href="https://kadeep.ai/studio"><picture>

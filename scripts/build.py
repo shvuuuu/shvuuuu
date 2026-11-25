@@ -784,6 +784,340 @@ def card_glance(theme: str):
     svg.save("card-glance")
 
 
+# --------------------------------------------------------------------------- ExtraTunnel
+# Two cards in extratunnel.ai's own language, not this page's: its near-black and cream, real values in
+# orange, placeholders in blue, the seal in green, the logo's brackets. The tunnel is the site's hero;
+# the loop below it is the site's "Proof you can check, not a promise" demo, drawn without a line of JS.
+
+ET = {
+    "dark": dict(bg="#09090a", surface="#111113", line="rgba(255,255,255,.1)", ink="#f4f3ef", muted="#9b9a95",
+                 dim="#66655f", accent="#ff5a1f", raw="#ff7d48", seal="#8ab8ff", ok="#5ad98c", hot="#ffffff",
+                 far="rgba(244,243,239,.34)", frame="rgba(90,217,140,.7)", lane="rgba(255,255,255,.07)"),
+    "light": dict(bg="#f4f3ef", surface="#ffffff", line="rgba(12,12,13,.1)", ink="#0c0c0d", muted="#5d5c58",
+                  dim="#98978f", accent="#ff5a1f", raw="#d2440c", seal="#1d5fe0", ok="#12803c", hot="#0c0c0d",
+                  far="rgba(12,12,13,.3)", frame="rgba(18,128,60,.75)", lane="rgba(12,12,13,.07)"),
+}
+ET_RAW = "0123456789ABCDEFGHKLMNPRSTWXYZ$#@%&"
+ET_SEAL = "⟦⟧_NAME1ID2="
+
+
+def et_mark(svg: Svg, x, y, h, ink, accent="#ff5a1f") -> float:
+    """ExtraTunnel's logo, h tall: two brackets round the orange square. Returns its width."""
+    k = h / 20
+    svg.add(f'<path d="M{x + 8 * k:g} {y + 1.5 * k:g}H{x + 2 * k:g}V{y + 18.5 * k:g}H{x + 8 * k:g}'
+            f'M{x + 20 * k:g} {y + 1.5 * k:g}H{x + 26 * k:g}V{y + 18.5 * k:g}H{x + 20 * k:g}" fill="none" '
+            f'stroke="{ink}" stroke-width="{3 * k:g}"/><rect x="{x + 11 * k:g}" y="{y + 7 * k:g}" '
+            f'width="{6 * k:g}" height="{6 * k:g}" fill="{accent}"/>')
+    return 28 * k
+
+
+def mark_extratunnel(svg: Svg, x, y, size):
+    return et_mark(svg, x, y + size * 0.1, size * 0.8, svg.c["ink"])
+
+
+@lru_cache(maxsize=None)
+def mono_outlines():
+    from fontTools.pens.boundsPen import BoundsPen
+    font = TTFont(io.BytesIO(static_font_bytes("GeistMono", 500)))
+    gs, cmap = font.getGlyphSet(), font.getBestCmap()
+    bp = BoundsPen(gs)
+    gs[cmap[ord("[")]].draw(bp)
+    return gs, cmap, font["head"].unitsPerEm, font["hmtx"][cmap[ord("0")]][0], bp.bounds
+
+
+def mono_glyph(ch: str, size: float) -> str:
+    """One Geist Mono character as path data, centred on (0, 0). ⟦ and ⟧ are in no font here, so they are
+    drawn as double-struck brackets in its proportions, as extratunnel.ai draws them."""
+    from fontTools.pens.svgPathPen import SVGPathPen
+    from fontTools.pens.transformPen import TransformPen
+    gs, cmap, upm, adv, (_, yb, _, yt) = mono_outlines()
+    s = size / upm
+    ox, oy = -adv * s / 2, 710 * s / 2              # centre the advance box on x, the cap height on y
+    if ch in "⟦⟧":
+        t, x0, x1 = 62, 148, 462
+        rects = [(x0, yb, x0 + t, yt), (x0, yt - t, x1, yt), (x0, yb, x1, yb + t), (x0 + t + 44, yb + t, x0 + 2 * t + 44, yt - t)]
+        if ch == "⟧":
+            rects = [(adv - b, y0, adv - a, y1) for a, y0, b, y1 in rects]
+        return "".join(f"M{ox + a * s:.1f} {oy - y0 * s:.1f}H{ox + b * s:.1f}V{oy - y1 * s:.1f}H{ox + a * s:.1f}Z"
+                       for a, y0, b, y1 in rects)
+    pen = SVGPathPen(gs, ntos=lambda v: f"{v:.1f}")
+    gs[cmap[ord(ch)]].draw(TransformPen(pen, (s, 0, 0, -s, ox, oy)))
+    return pen.getCommands()
+
+
+def et_frame(svg: Svg, cx, cy, half_w, half_h, col, lw, cls=""):
+    """A pair of brackets facing each other: the seal's frame."""
+    se = half_h * 0.5
+    c = f' class="{cls}"' if cls else ""
+    svg.add(f'<path{c} d="M{cx - half_w + se:.1f} {cy - half_h:.1f}H{cx - half_w:.1f}V{cy + half_h:.1f}H{cx - half_w + se:.1f}'
+            f'M{cx + half_w - se:.1f} {cy - half_h:.1f}H{cx + half_w:.1f}V{cy + half_h:.1f}H{cx + half_w - se:.1f}" '
+            f'fill="none" stroke="{col}" stroke-width="{lw:g}"/>')
+
+
+ET_HERO = dict(
+    title=("The privacy layer", "for AI coding agents."),
+    sub="Customer data stays on the laptop. Every request is signed.",
+    domain="extratunnel.ai ↗",
+)
+
+
+def card_extratunnel(theme: str):
+    """extratunnel.ai's hero: customer data flies down the tunnel in orange, crosses the green seal and comes
+    out the far end as blue placeholders. The same geometry and timing as the site's canvas, in CSS."""
+    W, H = 1280, 560
+    T, h = ET[theme], ET_HERO
+    svg = Svg(W, H, theme, f"ExtraTunnel. {' '.join(h['title'])} {h['sub']} On the right, the ExtraTunnel tunnel: "
+              "real values in orange stream into a green seal frame and leave as blue placeholders.")
+    cx, cy, F = 972.0, 284.0, 372.0
+    ZN, ZF, ZS, WX, WY = 0.6, 15.0, 3.4, 1.75, 1.02
+    S0, NR, CYCLE = 100.0, 20, 18.0
+    rnd = random.Random(11)
+    slots = []
+    for i in range(13):
+        yy = -WY + 2 * WY * (i + 0.5) / 13
+        slots += [(-WX, yy), (WX, yy)]
+    for i in range(5):
+        xx = WX - 0.16 - i * 0.2
+        slots += [(-xx, -WY), (xx, -WY), (-xx, WY), (xx, WY)]
+    svg.defs += [f'<path id="r{i}" d="{mono_glyph(ch, S0 * 0.085)}"/>' for i, ch in enumerate(ET_RAW)]
+    svg.defs += [f'<path id="s{i}" d="{mono_glyph(ch, S0 * 0.085)}"/>' for i, ch in enumerate(ET_SEAL)]
+    tS = (ZS - ZN) / (ZF - ZN)
+
+    def k_at(t):
+        return F / (ZN + (ZF - ZN) * t) / S0
+
+    stops = []
+    for j in range(25):
+        t = j / 24
+        z = ZN + (ZF - ZN) * t
+        al = min(1, (z - ZN) / 0.7) * min(1, (ZF - z) / 5)
+        stops.append(f"{t * 100:g}%{{transform:scale({k_at(t):.4f});opacity:{al:.3f}}}")
+    p = lambda v: f"{v * 100:.2f}%"
+    svg.css.append(
+        f".r{{transform-origin:{cx:g}px {cy:g}px;transform-box:view-box;animation:fly {CYCLE:g}s linear infinite;"
+        f"animation-delay:var(--d)}}@keyframes fly{{{''.join(stops)}}}"
+        f".r .a,.r .b{{animation:{CYCLE:g}s linear infinite;animation-delay:var(--d)}}.r .a{{animation-name:ra}}.r .b{{animation-name:sb}}"
+        f"@keyframes ra{{0%,{p(tS - 0.016)}{{opacity:1;fill:{T['raw']}}}{p(tS - 0.004)}{{opacity:1;fill:{T['hot']}}}"
+        f"{p(tS + 0.003)},100%{{opacity:0;fill:{T['hot']}}}}}"
+        f"@keyframes sb{{0%,{p(tS)}{{opacity:0;fill:{T['hot']}}}{p(tS + 0.002)}{{opacity:1;fill:{T['hot']}}}"
+        f"{p(tS + 0.03)},100%{{opacity:1;fill:{T['seal']}}}}}"
+        ".o1{opacity:.5}.o2{opacity:.75}"
+        "@keyframes etb{0%,49%{opacity:1}50%,100%{opacity:.25}}.etsq{animation:etb 1.6s steps(1) infinite}")
+
+    def brackets(s, col, lw):
+        x0, y0, se = WX * s, WY * s, 0.5 * s
+        return (f'<path d="M{cx - x0 + se:.1f} {cy - y0:.1f}H{cx - x0:.1f}V{cy + y0:.1f}H{cx - x0 + se:.1f}'
+                f'M{cx + x0 - se:.1f} {cy - y0:.1f}H{cx + x0:.1f}V{cy + y0:.1f}H{cx + x0 - se:.1f}" '
+                f'fill="none" stroke="{col}" stroke-width="{lw:g}"/>')
+
+    rings = []
+    for i in range(NR):
+        t0 = i / NR
+        static_raw = ZN + (ZF - ZN) * t0 < ZS
+        a, b = [], []
+        for sx, sy in slots:
+            o = rnd.choice(["o1", "o2", ""])
+            x, y = cx + sx * S0, cy + sy * S0
+            cls = f' class="{o}"' if o else ""
+            a.append(f'<use href="#r{rnd.randrange(len(ET_RAW))}" x="{x:.1f}" y="{y:.1f}"{cls}/>')
+            b.append(f'<use href="#s{rnd.randrange(len(ET_SEAL))}" x="{x:.1f}" y="{y:.1f}"{cls}/>')
+        rings.append(f'<g class="r" style="--d:-{t0 * CYCLE:g}s;transform:scale({k_at(t0):.4f})">'
+                     f'<g class="a" fill="{T["raw"]}" opacity="{1 if static_raw else 0}">{"".join(a)}</g>'
+                     f'<g class="b" fill="{T["seal"]}" opacity="{0 if static_raw else 1}">{"".join(b)}</g></g>')
+    far, sq = F / ZF, max(9.0, F / ZF * 0.62)
+    svg.defs.append(f'<clipPath id="card"><rect width="{W}" height="{H}" rx="{CARD_R}"/></clipPath>'
+                    f'<radialGradient id="glow" cx="{cx:g}" cy="{cy:g}" r="420" gradientUnits="userSpaceOnUse">'
+                    '<stop offset="0" stop-color="#ff5a1f" stop-opacity=".2"/><stop offset="1" stop-color="#ff5a1f" stop-opacity="0"/></radialGradient>'
+                    f'<linearGradient id="veil" x1="0" x2="1" y1="0" y2="0"><stop offset="0" stop-color="{T["bg"]}" stop-opacity=".97"/>'
+                    f'<stop offset=".42" stop-color="{T["bg"]}" stop-opacity=".86"/><stop offset=".66" stop-color="{T["bg"]}" stop-opacity="0"/></linearGradient>')
+    svg.add(f'<g clip-path="url(#card)"><rect width="{W}" height="{H}" fill="{T["bg"]}"/>'
+            f'<rect width="{W}" height="{H}" fill="url(#glow)"/>{brackets(far, T["far"], 1.5)}{"".join(rings)}'
+            f'<rect class="etsq" x="{cx - sq / 2:.1f}" y="{cy - sq / 2:.1f}" width="{sq:.1f}" height="{sq:.1f}" fill="#ff5a1f"/>'
+            f'{brackets(F / ZS, T["frame"], 2.2)}<rect width="{W}" height="{H}" fill="url(#veil)"/></g>'
+            f'<rect x=".5" y=".5" width="{W - 1}" height="{H - 1}" rx="{CARD_R}" fill="none" stroke="{T["line"]}"/>')
+    x = 64
+    w = et_mark(svg, x, 56, 26, T["ink"])
+    svg.text(x + w + 14, 79, "ExtraTunnel", "name", fill=T["ink"])
+    svg.text(x, 270, h["title"][0], "display", size=70, fill=T["ink"])
+    svg.text(x, 346, h["title"][1], "display", size=70, fill=T["ink"])
+    svg.text(x + 2, 410, h["sub"], "lede", size=24, fill=T["muted"])
+    svg.add(f'<rect x="{x + 2}" y="495" width="10" height="10" fill="{T["accent"]}"/>')
+    svg.text(x + 24, 506, h["domain"], "mono", size=19, fill=T["muted"])
+    svg.save("card-extratunnel")
+
+
+ET_PROOF = dict(
+    eyebrow="For security teams",
+    title="Proof you can check, not a promise.",
+    body="Every request takes the same path. It is sealed and checked on the laptop, the model sees only "
+         "stand-ins, the real values come back on the way home, and a signed receipt is written for each one.",
+    agents=("Claude Code", "Codex", "Cursor", "Copilot", "Gemini CLI", "Windsurf"),
+    # (real value, its stand-in, values sealed) as in the site's demo: all made up
+    samples=(("Dana Whitfield", "Rohan Malhotra", 2), ("5010 0234 5678", "7302 1188 4410", 1),
+             ("sk_live_51NxQ2v", "sk_live_8Hk2Rzq", 1), ("$124,500", "$131,200", 1),
+             ("m.reyes@harbor.com", "k.mehta@inlets.com", 1), ("512-44-9087", "807-31-2265", 1)),
+)
+
+
+def card_extratunnel_proof(theme: str):
+    """The site's request loop: out along the top from the agent, round the AI provider and home along the
+    bottom. Three lanes of characters stream round it, orange until the seal and blue until the restore; a
+    request packet laps once per receipt, the stations show what it carries, the receipts chain below."""
+    W, H = 1280, 812
+    T, k = ET[theme], ET_PROOF
+    agents, samples = k["agents"], k["samples"]
+    svg = Svg(W, H, theme, f"ExtraTunnel. {k['eyebrow']}. {k['title']} {k['body']} Below, one request end to end, "
+              "with made-up values: an agent such as Claude Code, Codex or Cursor asks for a fix about Dana Whitfield; "
+              "the seal turns the name into a stand-in, Rohan Malhotra; the check finds 0 real values left; the AI "
+              "provider sees only the stand-in; the restore puts the real name back; and a signed receipt joins the chain.")
+    c = T
+    N, CYC = len(samples), 6.4                       # one lap of the packet per receipt
+    TOTAL = N * CYC
+
+    # the stage and the loop
+    sx, sy, sw, sh = 40, 290, 1200, 380
+    cy, r = sy + sh * 0.52, sh * 0.2
+    ax, bx = sx + sw * 0.1, sx + sw * 0.9
+    ln = bx - ax
+    seal_x, check_x, edge_x, rest_x = ax + ln * 0.28, ax + ln * 0.48, ax + ln * 0.64, bx - ln * 0.58
+
+    def loop(rr):
+        """The stadium at radius rr, clockwise from its leftmost point, which is where the agent sits."""
+        return (f"M{ax - rr:.1f} {cy:.1f}A{rr:.1f} {rr:.1f} 0 0 1 {ax:.1f} {cy - rr:.1f}H{bx:.1f}"
+                f"A{rr:.1f} {rr:.1f} 0 0 1 {bx:.1f} {cy + rr:.1f}H{ax:.1f}A{rr:.1f} {rr:.1f} 0 0 1 {ax - rr:.1f} {cy:.1f}Z",
+                2 * ln + 2 * math.pi * rr)
+
+    mid, L = loop(r)
+    q = math.pi * r / 2
+    f_seal, f_check, f_rest = (q + 0.28 * ln) / L, (q + 0.48 * ln) / L, (q + ln + 2 * q + 0.58 * ln) / L
+    speed = L / CYC
+
+    svg.defs.append(f'<clipPath id="card"><rect width="{W}" height="{H}" rx="{CARD_R}"/></clipPath>'
+                    f'<clipPath id="stage"><rect x="{sx}" y="{sy}" width="{sw}" height="{sh}" rx="14"/></clipPath>'
+                    # sealed: past the seal on the way out, until the restore on the way home
+                    f'<clipPath id="sealed"><path d="M{seal_x:.1f} {sy}H{sx + sw}V{sy + sh}H{rest_x:.1f}V{cy:.1f}H{seal_x:.1f}Z"/></clipPath>'
+                    f'<clipPath id="real"><path d="M{sx} {sy}H{seal_x:.1f}V{cy:.1f}H{rest_x:.1f}V{sy + sh}H{sx}Z"/></clipPath>')
+    svg.add(f'<g clip-path="url(#card)"><rect width="{W}" height="{H}" fill="{c["bg"]}"/></g>'
+            f'<rect x=".5" y=".5" width="{W - 1}" height="{H - 1}" rx="{CARD_R}" fill="none" stroke="{c["line"]}"/>')
+
+    # the heading, in the site's eyebrow-and-title style
+    x = 56
+    w = et_mark(svg, x, 50, 22, c["ink"])
+    svg.text(x + w + 12, 70, "ExtraTunnel", "chip", size=20, fill=c["ink"])
+    svg.text(W - 56, 70, k["eyebrow"], "chip", size=20, fill=c["accent"], anchor="end")
+    svg.text(x - 2, 152, k["title"], "h2", size=52, fill=c["ink"])
+    svg.paragraph(x, 198, k["body"], "body", 1080, 32, fill=c["muted"], size=21)
+    svg.text(sx + 4, sy - 16, "One request, end to end", "chip", size=18, fill=c["ink"])
+    svg.text(sx + 4 + measure("One request, end to end", "chip", 18) + 14, sy - 16,
+             "made-up values, running in this image", "small", size=16, fill=c["dim"])
+
+    # the stage: the laptop on the left, the open network on the right
+    svg.add(f'<g clip-path="url(#stage)"><rect x="{sx}" y="{sy}" width="{sw}" height="{sh}" fill="{c["bg"]}"/>'
+            f'<rect x="{sx}" y="{sy}" width="{edge_x - sx:.1f}" height="{sh}" fill="{c["surface"]}"/>'
+            f'<path d="M{edge_x:.1f} {sy}V{sy + sh}" stroke="{c["line"]}" stroke-dasharray="4 6"/>')
+    svg.text(sx + 24, sy + 34, "On your laptop", "small", size=15, fill=c["dim"])
+    svg.text(edge_x + 24, sy + 34, "Leaves the laptop", "small", size=15, fill=c["dim"])
+    svg.add(f'<path d="{mid}" fill="none" stroke="{c["lane"]}" stroke-width="40"/>')
+
+    # three lanes of characters, each one text on its own loop, its offset sliding a whole lap per period
+    rnd = random.Random(7)
+    lanes = []
+    for off, size, op, pitch in ((-12, 11, 0.5, 15.0), (0, 13, 1.0, 11.5), (12, 11, 0.5, 15.0)):
+        rr = r - off
+        d, Lr = loop(rr)
+        n = round(Lr / pitch)
+        ls = Lr / n - 0.6 * size
+        lanes.append((len(lanes), d, Lr, n, ls, size, op))
+        svg.defs.append(f'<path id="lane{len(lanes) - 1}" d="{d}"/>')
+    svg.glyphs[("GeistMono", 500)].update(ET_RAW + "[]_NAME1ID2=")
+    fam = f"'GeistMono500',{FALLBACK['GeistMono']}"
+
+    def lane_text(i, Lr, n, ls, size, op, chars, fill, clip):
+        seq = [rnd.choice(chars) for _ in range(n)] * 2   # two laps of one sequence, so the slide loops cleanly
+        spans = "".join(f'<tspan fill-opacity="{rnd.choice((0.45, 0.7, 1)) * op:.2f}">{escape(ch)}</tspan>' for ch in seq)
+        svg.add(f'<g clip-path="url(#{clip})"><text font-family="{fam}" font-size="{size}" font-weight="500" '
+                f'letter-spacing="{ls:.3f}" fill="{fill}" dominant-baseline="central">'
+                f'<textPath href="#lane{i}" startOffset="{-Lr:.1f}">{spans}<animate attributeName="startOffset" '
+                f'from="{-Lr:.1f}" to="0" dur="{Lr / speed:.3f}s" repeatCount="indefinite"/></textPath></text></g>')
+
+    for i, d, Lr, n, ls, size, op in lanes:
+        lane_text(i, Lr, n, ls, size, op, ET_RAW, c["raw"], "real")
+        lane_text(i, Lr, n, ls, size, op, "[]_NAME1ID2=", c["seal"], "sealed")
+
+    # the seal's frames, flashing as the packet crosses them
+    def flash(name, f):
+        a, b = max(0, f * 100 - 0.4), f * 100
+        svg.css.append(f"@keyframes {name}{{0%,{a:.2f}%{{opacity:.55}}{b:.2f}%{{opacity:1}}"
+                       f"{min(100, b + 7):.2f}%,100%{{opacity:.55}}}}.{name}{{animation:{name} {CYC}s linear infinite}}")
+    for name, fx, fy, f in (("fs", seal_x, cy - r, f_seal), ("fr", rest_x, cy + r, f_rest)):
+        flash(name, f)
+        et_frame(svg, fx, fy, 14, 26, c["frame"], 2.4, name)
+    flash("fc", f_check)
+    svg.add(f'<circle class="fc" cx="{check_x:.1f}" cy="{cy - r:.1f}" r="5" fill="{c["ok"]}"/>')
+
+    # the packet: one request, orange out of the agent, blue past the seal, orange again once restored
+    kt = f"0;{f_seal:.4f};{f_rest:.4f}"
+    svg.add(f'<g><animateMotion dur="{CYC}s" repeatCount="indefinite" path="{mid}" rotate="0"/>'
+            f'<rect x="-7" y="-7" width="14" height="14" rx="2" fill="{c["raw"]}">'
+            f'<animate attributeName="fill" dur="{CYC}s" repeatCount="indefinite" calcMode="discrete" '
+            f'keyTimes="{kt}" values="{c["raw"]};{c["seal"]};{c["raw"]}"/></rect>'
+            f'<rect x="-12" y="-12" width="24" height="24" rx="4" fill="none" stroke="{c["hot"]}" stroke-opacity=".35"/></g>')
+    svg.add("</g>")
+
+    # the stations; what they show changes once a lap, in step with the packet
+    for j in range(N):
+        visible = 100 / N
+        svg.css.append(f".v{j}{{opacity:0;animation:v {TOTAL:g}s steps(1) infinite;animation-delay:{j * CYC - TOTAL:g}s}}")
+    svg.css.append(f"@keyframes v{{0%{{opacity:1}}{100 / N:.3f}%,100%{{opacity:0}}}}")
+
+    def station(px, py, anchor, name, note, values, col):
+        """name (a fixed string, or one per lap), a quieter note, then the value, one per lap."""
+        names = name if isinstance(name, tuple) else None
+        if names:
+            for j in range(N):
+                svg.add(f'<g class="v{j}">')
+                svg.text(px, py, names[j % len(names)], "chip", size=19, fill=c["ink"], anchor=anchor)
+                svg.add("</g>")
+        else:
+            svg.text(px, py, name, "chip", size=19, fill=c["ink"], anchor=anchor)
+        svg.text(px, py + 23, note, "small", size=15, fill=c["muted"], anchor=anchor)
+        if isinstance(values, tuple):
+            for j in range(N):
+                svg.add(f'<g class="v{j}">')
+                svg.text(px, py + 48, values[j], "monob", size=16, fill=col, anchor=anchor)
+                svg.add("</g>")
+        else:
+            svg.text(px, py + 48, values, "monob", size=16, fill=col, anchor=anchor)
+
+    raw = tuple(s[0] for s in samples)
+    stand = tuple(s[1] for s in samples)
+    top = cy - r - 40 - 48
+    station(ax + 28, cy - 22, "start", agents, "asks for a fix", raw, c["raw"])
+    station(seal_x, top, "middle", "Seal", "real values become stand-ins", stand, c["seal"])
+    station(check_x, top, "middle", "Check", "nothing real is left", "0 real values", c["ok"])
+    station(bx - 28, cy - 22, "end", "AI provider", "sees stand-ins only", stand, c["seal"])
+    station(rest_x, cy + r + 40 + 6, "middle", "Restore", "real values put back", raw, c["raw"])
+
+    # the receipts: numbered, signed and chained, newest on top
+    rh = random.Random(413)
+    hashes = [f"{rh.getrandbits(16):04x}…{rh.getrandbits(8):02x}" for _ in range(N + 1)]
+    ly = sy + sh + 40
+    for row in range(3):
+        for j in range(N):
+            i = (j - row) % N
+            svg.add(f'<g class="v{j}">')
+            fill = c["muted"] if row == 0 else c["dim"]
+            cols = [(f"#{413 + j - row:04d}", c["ink"]), (agents[i % len(agents)], fill),
+                    (f"{samples[i][2]} sealed", fill), ("0 left the laptop", fill),
+                    (f"{hashes[i]} → {hashes[i + 1]}", fill), ("signed", c["ok"])]
+            xs = (sx + 4, sx + 90, sx + 250, sx + 380, sx + 600, sx + 860)
+            for (s, f), cx_ in zip(cols, xs):
+                svg.text(cx_, ly + row * 30, s, "mono", size=15, fill=f, opacity=1 if row == 0 else 0.8 - row * 0.2)
+            svg.add("</g>")
+    svg.text(W - 56, ly + 60, "counts and hashes, never text", "small", size=15, fill=c["dim"], anchor="end")
+    svg.save("card-extratunnel-proof")
+
+
 def chip(name: str, label: str, mark, mark_w: float, mark_h: float = 24):
     """A link with its logo: a pill with a hairline edge and a soft shadow, sized to its label."""
     def build(theme):
@@ -1082,11 +1416,14 @@ def footer(theme: str):
 
 BUILDERS = {
     "hero": hero,
+    "link-extratunnel": chip("extratunnel", "ExtraTunnel", mark_extratunnel, 22.4),
     "link-kadeep": chip("kadeep", "KaDeep AI", mark_kadeep_ai, 24),
     "link-9to5code": chip("9to5code", "9to5code", mark_9to5, 24),
     "link-x": chip("x", "@shvuuuu", mark_x, 20, 20),
     "link-linkedin": chip("linkedin", "LinkedIn", mark_linkedin, 22, 22),
     "h-building": heading("h-building", "What I’m building.", "Products for the agent era."),
+    "card-extratunnel": card_extratunnel,
+    "card-extratunnel-proof": card_extratunnel_proof,
     "card-kadeep": card_kadeep,
     "card-glance": card_glance,
     "card-hosh": half_card("hosh"),
