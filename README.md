@@ -33,14 +33,7 @@
 <p>
 <a href="https://extratunnel.ai"><picture>
   <source media="(prefers-color-scheme: dark)" srcset="assets/dark/card-extratunnel.svg">
-  <img src="assets/light/card-extratunnel.svg" width="100%" alt="ExtraTunnel. The privacy layer for AI coding agents. Customer data stays on the laptop. Every request is signed. On the right, the ExtraTunnel tunnel: real values in orange stream into a green seal frame and leave as blue placeholders.">
-</picture></a>
-</p>
-
-<p>
-<a href="https://extratunnel.ai/#security-teams"><picture>
-  <source media="(prefers-color-scheme: dark)" srcset="assets/dark/card-extratunnel-proof.svg">
-  <img src="assets/light/card-extratunnel-proof.svg" width="100%" alt="ExtraTunnel, for security teams. Proof you can check, not a promise. Every request takes the same path: sealed and checked on the laptop, the model sees only stand-ins, the real values come back on the way home, and a signed receipt is written for each one. Below, one request end to end with made-up values: Claude Code, Codex, Cursor and other agents send Dana Whitfield, the seal turns it into the stand-in Rohan Malhotra, the check finds 0 real values, the AI provider sees only the stand-in, the restore puts the real name back, and each receipt is chained to the last.">
+  <img src="assets/light/card-extratunnel.svg" width="100%" alt="ExtraTunnel. The privacy layer for AI coding agents. Customer data stays on the laptop. Every request is signed. On the right, the ExtraTunnel tunnel: real values in orange stream into a green seal frame and leave as blue placeholders. Below, proof you can check, not a promise: one request end to end, with made-up values. An agent such as Claude Code, Codex or Cursor sends Dana Whitfield, the seal turns it into the stand-in Rohan Malhotra, the check finds 0 real values, the AI provider sees only the stand-in, and the restore puts the real name back.">
 </picture></a>
 </p>
 

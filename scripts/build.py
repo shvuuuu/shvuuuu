@@ -861,14 +861,11 @@ ET_HERO = dict(
 )
 
 
-def card_extratunnel(theme: str):
-    """extratunnel.ai's hero: customer data flies down the tunnel in orange, crosses the green seal and comes
-    out the far end as blue placeholders. The same geometry and timing as the site's canvas, in CSS."""
-    W, H = 1280, 560
-    T, h = ET[theme], ET_HERO
-    svg = Svg(W, H, theme, f"ExtraTunnel. {' '.join(h['title'])} {h['sub']} On the right, the ExtraTunnel tunnel: "
-              "real values in orange stream into a green seal frame and leave as blue placeholders.")
-    cx, cy, F = 972.0, 284.0, 372.0
+def draw_tunnel(svg: Svg, T, H):
+    """extratunnel.ai's hero, H tall: customer data flies down the tunnel in orange, crosses the green seal and
+    comes out the far end as blue placeholders. The same geometry and timing as the site's canvas, in CSS."""
+    W, h = svg.w, ET_HERO
+    cx, cy, F = 972.0, H / 2, 372.0
     ZN, ZF, ZS, WX, WY = 0.6, 15.0, 3.4, 1.75, 1.02
     S0, NR, CYCLE = 100.0, 20, 18.0
     rnd = random.Random(11)
@@ -925,25 +922,23 @@ def card_extratunnel(theme: str):
                      f'<g class="a" fill="{T["raw"]}" opacity="{1 if static_raw else 0}">{"".join(a)}</g>'
                      f'<g class="b" fill="{T["seal"]}" opacity="{0 if static_raw else 1}">{"".join(b)}</g></g>')
     far, sq = F / ZF, max(9.0, F / ZF * 0.62)
-    svg.defs.append(f'<clipPath id="card"><rect width="{W}" height="{H}" rx="{CARD_R}"/></clipPath>'
+    svg.defs.append(f'<clipPath id="top"><rect width="{W}" height="{H}"/></clipPath>'
                     f'<radialGradient id="glow" cx="{cx:g}" cy="{cy:g}" r="420" gradientUnits="userSpaceOnUse">'
                     '<stop offset="0" stop-color="#ff5a1f" stop-opacity=".2"/><stop offset="1" stop-color="#ff5a1f" stop-opacity="0"/></radialGradient>'
                     f'<linearGradient id="veil" x1="0" x2="1" y1="0" y2="0"><stop offset="0" stop-color="{T["bg"]}" stop-opacity=".97"/>'
                     f'<stop offset=".42" stop-color="{T["bg"]}" stop-opacity=".86"/><stop offset=".66" stop-color="{T["bg"]}" stop-opacity="0"/></linearGradient>')
-    svg.add(f'<g clip-path="url(#card)"><rect width="{W}" height="{H}" fill="{T["bg"]}"/>'
+    svg.add(f'<g clip-path="url(#card)"><g clip-path="url(#top)">'
             f'<rect width="{W}" height="{H}" fill="url(#glow)"/>{brackets(far, T["far"], 1.5)}{"".join(rings)}'
             f'<rect class="etsq" x="{cx - sq / 2:.1f}" y="{cy - sq / 2:.1f}" width="{sq:.1f}" height="{sq:.1f}" fill="#ff5a1f"/>'
-            f'{brackets(F / ZS, T["frame"], 2.2)}<rect width="{W}" height="{H}" fill="url(#veil)"/></g>'
-            f'<rect x=".5" y=".5" width="{W - 1}" height="{H - 1}" rx="{CARD_R}" fill="none" stroke="{T["line"]}"/>')
+            f'{brackets(F / ZS, T["frame"], 2.2)}<rect width="{W}" height="{H}" fill="url(#veil)"/></g></g>')
     x = 64
     w = et_mark(svg, x, 56, 26, T["ink"])
     svg.text(x + w + 14, 79, "ExtraTunnel", "name", fill=T["ink"])
-    svg.text(x, 270, h["title"][0], "display", size=70, fill=T["ink"])
-    svg.text(x, 346, h["title"][1], "display", size=70, fill=T["ink"])
-    svg.text(x + 2, 410, h["sub"], "lede", size=24, fill=T["muted"])
-    svg.add(f'<rect x="{x + 2}" y="495" width="10" height="10" fill="{T["accent"]}"/>')
-    svg.text(x + 24, 506, h["domain"], "mono", size=19, fill=T["muted"])
-    svg.save("card-extratunnel")
+    svg.text(x, H / 2 - 12, h["title"][0], "display", size=70, fill=T["ink"])
+    svg.text(x, H / 2 + 64, h["title"][1], "display", size=70, fill=T["ink"])
+    svg.text(x + 2, H / 2 + 124, h["sub"], "lede", size=24, fill=T["muted"])
+    svg.add(f'<rect x="{x + 2}" y="{H - 61}" width="10" height="10" fill="{T["accent"]}"/>')
+    svg.text(x + 24, H - 50, h["domain"], "mono", size=19, fill=T["muted"])
 
 
 ET_PROOF = dict(
@@ -959,23 +954,18 @@ ET_PROOF = dict(
 )
 
 
-def card_extratunnel_proof(theme: str):
+def draw_loop(svg: Svg, T, top: float) -> float:
     """The site's request loop: out along the top from the agent, round the AI provider and home along the
     bottom. Three lanes of characters stream round it, orange until the seal and blue until the restore; a
-    request packet laps once per receipt, the stations show what it carries, the receipts chain below."""
-    W, H = 1280, 812
-    T, k = ET[theme], ET_PROOF
+    request packet laps once a cycle and the stations show what it carries. Returns the bottom of the stage."""
+    W, k = svg.w, ET_PROOF
     agents, samples = k["agents"], k["samples"]
-    svg = Svg(W, H, theme, f"ExtraTunnel. {k['eyebrow']}. {k['title']} {k['body']} Below, one request end to end, "
-              "with made-up values: an agent such as Claude Code, Codex or Cursor asks for a fix about Dana Whitfield; "
-              "the seal turns the name into a stand-in, Rohan Malhotra; the check finds 0 real values left; the AI "
-              "provider sees only the stand-in; the restore puts the real name back; and a signed receipt joins the chain.")
     c = T
     N, CYC = len(samples), 6.4                       # one lap of the packet per receipt
     TOTAL = N * CYC
 
     # the stage and the loop
-    sx, sy, sw, sh = 40, 290, 1200, 380
+    sx, sy, sw, sh = 40, top + 104, 1200, 380
     cy, r = sy + sh * 0.52, sh * 0.2
     ax, bx = sx + sw * 0.1, sx + sw * 0.9
     ln = bx - ax
@@ -992,24 +982,14 @@ def card_extratunnel_proof(theme: str):
     f_seal, f_check, f_rest = (q + 0.28 * ln) / L, (q + 0.48 * ln) / L, (q + ln + 2 * q + 0.58 * ln) / L
     speed = L / CYC
 
-    svg.defs.append(f'<clipPath id="card"><rect width="{W}" height="{H}" rx="{CARD_R}"/></clipPath>'
-                    f'<clipPath id="stage"><rect x="{sx}" y="{sy}" width="{sw}" height="{sh}" rx="14"/></clipPath>'
+    svg.defs.append(f'<clipPath id="stage"><rect x="{sx}" y="{sy}" width="{sw}" height="{sh}" rx="14"/></clipPath>'
                     # sealed: past the seal on the way out, until the restore on the way home
                     f'<clipPath id="sealed"><path d="M{seal_x:.1f} {sy}H{sx + sw}V{sy + sh}H{rest_x:.1f}V{cy:.1f}H{seal_x:.1f}Z"/></clipPath>'
                     f'<clipPath id="real"><path d="M{sx} {sy}H{seal_x:.1f}V{cy:.1f}H{rest_x:.1f}V{sy + sh}H{sx}Z"/></clipPath>')
-    svg.add(f'<g clip-path="url(#card)"><rect width="{W}" height="{H}" fill="{c["bg"]}"/></g>'
-            f'<rect x=".5" y=".5" width="{W - 1}" height="{H - 1}" rx="{CARD_R}" fill="none" stroke="{c["line"]}"/>')
-
-    # the heading, in the site's eyebrow-and-title style
-    x = 56
-    w = et_mark(svg, x, 50, 22, c["ink"])
-    svg.text(x + w + 12, 70, "ExtraTunnel", "chip", size=20, fill=c["ink"])
-    svg.text(W - 56, 70, k["eyebrow"], "chip", size=20, fill=c["accent"], anchor="end")
-    svg.text(x - 2, 152, k["title"], "h2", size=52, fill=c["ink"])
-    svg.paragraph(x, 198, k["body"], "body", 1080, 32, fill=c["muted"], size=21)
-    svg.text(sx + 4, sy - 16, "One request, end to end", "chip", size=18, fill=c["ink"])
-    svg.text(sx + 4 + measure("One request, end to end", "chip", 18) + 14, sy - 16,
-             "made-up values, running in this image", "small", size=16, fill=c["dim"])
+    # the heading, in the site's eyebrow-and-title style, under a hairline
+    svg.add(f'<path d="M56 {top:g}H{W - 56}" stroke="{c["line"]}"/>')
+    svg.text(56, top + 66, k["title"], "h2", size=40, fill=c["ink"])
+    svg.text(W - 56, top + 64, k["eyebrow"], "chip", size=19, fill=c["accent"], anchor="end")
 
     # the stage: the laptop on the left, the open network on the right
     svg.add(f'<g clip-path="url(#stage)"><rect x="{sx}" y="{sy}" width="{sw}" height="{sh}" fill="{c["bg"]}"/>'
@@ -1062,6 +1042,7 @@ def card_extratunnel_proof(theme: str):
             f'<animate attributeName="fill" dur="{CYC}s" repeatCount="indefinite" calcMode="discrete" '
             f'keyTimes="{kt}" values="{c["raw"]};{c["seal"]};{c["raw"]}"/></rect>'
             f'<rect x="-12" y="-12" width="24" height="24" rx="4" fill="none" stroke="{c["hot"]}" stroke-opacity=".35"/></g>')
+    svg.text(edge_x + 24, sy + sh - 22, "One request, end to end, with made-up values", "small", size=15, fill=c["dim"])
     svg.add("</g>")
 
     # the stations; what they show changes once a lap, in step with the packet
@@ -1098,24 +1079,26 @@ def card_extratunnel_proof(theme: str):
     station(bx - 28, cy - 22, "end", "AI provider", "sees stand-ins only", stand, c["seal"])
     station(rest_x, cy + r + 40 + 6, "middle", "Restore", "real values put back", raw, c["raw"])
 
-    # the receipts: numbered, signed and chained, newest on top
-    rh = random.Random(413)
-    hashes = [f"{rh.getrandbits(16):04x}…{rh.getrandbits(8):02x}" for _ in range(N + 1)]
-    ly = sy + sh + 40
-    for row in range(3):
-        for j in range(N):
-            i = (j - row) % N
-            svg.add(f'<g class="v{j}">')
-            fill = c["muted"] if row == 0 else c["dim"]
-            cols = [(f"#{413 + j - row:04d}", c["ink"]), (agents[i % len(agents)], fill),
-                    (f"{samples[i][2]} sealed", fill), ("0 left the laptop", fill),
-                    (f"{hashes[i]} → {hashes[i + 1]}", fill), ("signed", c["ok"])]
-            xs = (sx + 4, sx + 90, sx + 250, sx + 380, sx + 600, sx + 860)
-            for (s, f), cx_ in zip(cols, xs):
-                svg.text(cx_, ly + row * 30, s, "mono", size=15, fill=f, opacity=1 if row == 0 else 0.8 - row * 0.2)
-            svg.add("</g>")
-    svg.text(W - 56, ly + 60, "counts and hashes, never text", "small", size=15, fill=c["dim"], anchor="end")
-    svg.save("card-extratunnel-proof")
+    return sy + sh
+
+
+
+def card_extratunnel(theme: str):
+    """ExtraTunnel in one card: the site's tunnel on top, its request loop under it."""
+    T, h, k = ET[theme], ET_HERO, ET_PROOF
+    W, HH = 1280, 480
+    H = HH + 104 + 380 + 40
+    svg = Svg(W, H, theme, f"ExtraTunnel. {' '.join(h['title'])} {h['sub']} On the right, the ExtraTunnel tunnel: "
+              "real values in orange stream into a green seal frame and leave as blue placeholders. "
+              f"Below, {k['title']} One request end to end, with made-up values: an agent such as Claude Code, Codex or "
+              "Cursor sends Dana Whitfield; the seal turns the name into a stand-in, Rohan Malhotra; the check finds 0 "
+              "real values left; the AI provider sees only the stand-in; and the restore puts the real name back.")
+    svg.defs.append(f'<clipPath id="card"><rect width="{W}" height="{H}" rx="{CARD_R}"/></clipPath>')
+    svg.add(f'<g clip-path="url(#card)"><rect width="{W}" height="{H}" fill="{T["bg"]}"/></g>')
+    draw_tunnel(svg, T, HH)
+    draw_loop(svg, T, HH)
+    svg.add(f'<rect x=".5" y=".5" width="{W - 1}" height="{H - 1}" rx="{CARD_R}" fill="none" stroke="{T["line"]}"/>')
+    svg.save("card-extratunnel")
 
 
 def chip(name: str, label: str, mark, mark_w: float, mark_h: float = 24):
@@ -1423,7 +1406,6 @@ BUILDERS = {
     "link-linkedin": chip("linkedin", "LinkedIn", mark_linkedin, 22, 22),
     "h-building": heading("h-building", "What I’m building.", "Products for the agent era."),
     "card-extratunnel": card_extratunnel,
-    "card-extratunnel-proof": card_extratunnel_proof,
     "card-kadeep": card_kadeep,
     "card-glance": card_glance,
     "card-hosh": half_card("hosh"),
